@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Gmsh runtime
+        run: sudo apt-get update && sudo apt-get install -y libglu1-mesa
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - name: Install package
+        run: python -m pip install --upgrade pip && python -m pip install -e '.[test]'
+      - name: Unit and integration tests
+        run: pytest -q
+      - name: Real Gmsh/scikit-fem smoke test
+        run: pa-fem self-test

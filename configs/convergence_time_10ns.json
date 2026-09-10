@@ -1,0 +1,13 @@
+{
+  "case_name": "convergence_time_h40um_dt10ns",
+  "mesh": {
+    "element_size_m": 0.00004,
+    "interface_size_m": 0.00004,
+    "source_size_m": 0.00004
+  },
+  "time": {
+    "t_end_s": 1.2e-5,
+    "dt_s": 1.0e-8,
+    "save_every": 40
+  }
+}

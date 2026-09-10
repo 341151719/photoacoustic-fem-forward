@@ -1,0 +1,36 @@
+{
+  "reference_case": "results/reference_1MHz",
+  "spatial_coarse_case": "results/convergence_spatial_80um",
+  "spatial_fine_case": "results/convergence_spatial_30um",
+  "temporal_coarse_case": "results/convergence_time_10ns",
+  "receiver": {
+    "first_threshold_time_s": 3.215e-06,
+    "expected_center_path_time_s": 3.6240786240786234e-06,
+    "raw_peak_time_s": 3.595e-06,
+    "raw_peak_time_relative_error_vs_center": 0.008023728813559174,
+    "raw_peak_pa": 620.4275725471977,
+    "measured_peak_pa": 251.0098618694713
+  },
+  "numerics": {
+    "spatial_waveform_relative_l2_h80_vs_h40": 0.3610741806688864,
+    "spatial_measured_relative_l2_h80_vs_h40": 0.0910894740619064,
+    "spatial_waveform_relative_l2_h40_vs_h30": 0.09018943303657896,
+    "spatial_measured_relative_l2_h40_vs_h30": 0.01349919844007392,
+    "temporal_waveform_relative_l2_dt10ns_vs_dt5ns": 0.07147886933018023,
+    "temporal_measured_relative_l2_dt10ns_vs_dt5ns": 0.008809441436367612,
+    "spatial_peak_time_difference_s": -5.49999999999999e-08,
+    "spatial_peak_amplitude_relative_difference": 0.03383826398860393,
+    "fine_peak_time_difference_s": -1.999999999999981e-08,
+    "fine_peak_amplitude_relative_difference": 0.024900922438328095,
+    "temporal_peak_time_difference_s": 5.000000000000376e-09,
+    "temporal_peak_amplitude_relative_difference": 0.028856725672538296,
+    "reference_min_angle_deg": 38.401283921898646,
+    "reference_max_aspect_ratio": 1.5886008910048355,
+    "maximum_positive_energy_increment_relative": 7.302403379949888e-16
+  },
+  "reference_hard_checks": {
+    "passed": 6,
+    "total": 6,
+    "status": "pass"
+  }
+}

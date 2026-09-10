@@ -1,0 +1,65 @@
+{
+  "case_name": "baseline_1MHz_debug",
+  "random_seed": 20260910,
+  "geometry": {
+    "domain_x_min_m": -0.006,
+    "domain_x_max_m": 0.006,
+    "domain_y_min_m": 0.0,
+    "domain_y_max_m": 0.01,
+    "tissue_x_min_m": -0.005,
+    "tissue_x_max_m": 0.005,
+    "tissue_y_min_m": 0.002,
+    "tissue_y_max_m": 0.009,
+    "absorber_x_m": 0.0,
+    "absorber_y_m": 0.0055,
+    "absorber_radius_m": 0.0003,
+    "sensor_x_min_m": -0.0015,
+    "sensor_x_max_m": 0.0015,
+    "sensor_y_m": 0.0
+  },
+  "mesh": {
+    "element_size_m": 0.0002,
+    "interface_size_m": 0.0001,
+    "source_size_m": 0.00008,
+    "algorithm": 6,
+    "msh_file_version": 4.1
+  },
+  "materials": {
+    "rho_water_kg_m3": 1000.0,
+    "c_water_m_s": 1480.0,
+    "rho_tissue_kg_m3": 1050.0,
+    "c_tissue_m_s": 1540.0,
+    "rho_absorber_kg_m3": 1050.0,
+    "c_absorber_m_s": 1540.0,
+    "mu_a_water_m_inv": 0.0,
+    "mu_a_tissue_m_inv": 10.0,
+    "mu_a_absorber_m_inv": 1000.0,
+    "gamma_water": 0.0,
+    "gamma_tissue": 0.1,
+    "gamma_absorber": 0.1,
+    "eta_th_water": 1.0,
+    "eta_th_tissue": 1.0,
+    "eta_th_absorber": 1.0
+  },
+  "optical": {
+    "phi_peak_j_m2": 100.0,
+    "sigma_m": 0.0002,
+    "source_x_m": 0.0,
+    "source_y_m": 0.0055,
+    "laser_pulse_width_s": 1.0e-8,
+    "require_initial_pressure_approximation": true
+  },
+  "sensor": {
+    "center_frequency_hz": 1000000.0,
+    "fractional_bandwidth_fwhm": 0.8,
+    "filter_order": 4,
+    "adc_rate_hz": null,
+    "noise_rms_pa": 0.0,
+    "noise_seed": 20260910
+  },
+  "time": {
+    "t_end_s": 8.0e-6,
+    "dt_s": 2.0e-8,
+    "save_every": 20
+  }
+}

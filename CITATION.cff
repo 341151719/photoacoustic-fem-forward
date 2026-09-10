@@ -1,0 +1,29 @@
+cff-version: 1.2.0
+message: "If you use this physical forward model, please cite this repository and the underlying photoacoustic literature."
+title: "Photoacoustic FEM Forward"
+type: software
+version: 0.1.0
+date-released: 2026-09-10
+license: MIT
+repository-code: "https://github.com/341151719/photoacoustic-fem-forward"
+keywords:
+  - photoacoustic imaging
+  - finite element method
+  - transient acoustics
+  - Gmsh
+  - scikit-fem
+preferred-citation:
+  type: article
+  title: "Dual-compressed photoacoustic single-pixel imaging"
+  authors:
+    - family-names: Guo
+      given-names: Yuning
+    - family-names: Li
+      given-names: Baowen
+    - family-names: Yin
+      given-names: Xiaobo
+  journal: National Science Review
+  volume: 10
+  issue: 1
+  year: 2023
+  doi: 10.1093/nsr/nwac058

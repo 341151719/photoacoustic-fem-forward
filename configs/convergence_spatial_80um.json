@@ -1,0 +1,13 @@
+{
+  "case_name": "convergence_spatial_80um_dt5ns",
+  "mesh": {
+    "element_size_m": 0.00008,
+    "interface_size_m": 0.00008,
+    "source_size_m": 0.00008
+  },
+  "time": {
+    "t_end_s": 1.2e-5,
+    "dt_s": 5.0e-9,
+    "save_every": 80
+  }
+}
