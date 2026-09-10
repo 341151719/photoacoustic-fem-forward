@@ -28,7 +28,7 @@ p_0=\Gamma\eta_{th}\mu_a\Phi.
 
 ## 安装
 
-建议 Python 3.11+，当前已在 Python 3.12 上验证。依赖版本记录在 `requirements.txt`，核心链是 Gmsh 4.15.2、meshio 5.3.5、scikit-fem 12.0.2、NumPy 2.5.3、SciPy 1.18.1。
+建议 Python 3.11+，当前已在 Python 3.11/3.12 上验证。依赖版本记录在 `requirements.txt`，核心链是 Gmsh 4.15.2、meshio 5.3.5、scikit-fem 12.0.2、SciPy 1.18.1；NumPy 因 Python 轮子兼容性在 Python 3.11 固定为 2.4.6，在 Python 3.12+ 固定为 2.5.3。
 
 ```bash
 git clone https://github.com/341151719/photoacoustic-fem-forward.git
