@@ -129,6 +129,21 @@ python tools/make_visual_validation.py \
 当前 40 vs 30 µm 的 1 MHz 波形 L2 差为 1.35%，10 vs 5 ns 的差为 0.88%；
 有效性结论因而限定于已建模的 1 MHz 接收带宽。
 
+## 严格 Stage A/B 与 10 MHz 验收
+
+除单算例内部自检外，仓库提供带独立参照的严格验收：
+
+```bash
+source scripts/activate.sh
+python -m pa_fem.cli strict-validate --outdir results/strict_validation
+```
+
+该命令运行二维域内嵌的一维 d'Alembert 平面高斯解析解、封闭域能量守恒、
+小域/大域 ABC 对照、解析平面界面反射系数、有限孔径解析积分，以及真正的
+10 MHz 空间/时间细化。严格命令只在全部硬检查通过时返回 0；详细方法、阈值
+和基准结果见 `docs/STRICT_VALIDATION_CN.md`。10 MHz 项是保持相应声学尺度的
+缩小标准算例，用于验证数值参数，不冒充论文没有公开的实验几何或探头响应。
+
 ## 与参考文件的边界
 
 原始建模计划已保存在 `docs/reference`。论文原始包与参考 Python FEM 包作为 GitHub Release 附件发布，避免膨胀 Git 历史；来源、许可说明与 SHA256 见 `THIRD_PARTY_NOTICES.md`。参考扬声器工程只用于代码组织与 Gmsh/meshio/scikit-fem 工程实践，其多物理方程没有移植。当前项目不包含压缩重建算法。

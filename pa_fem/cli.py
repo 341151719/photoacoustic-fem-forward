@@ -38,6 +38,8 @@ def _parser() -> argparse.ArgumentParser:
     test = sub.add_parser("self-test", help="small real-Gmsh/scikit-fem smoke test")
     test.add_argument("--outdir", type=Path, default=None)
     test.add_argument("--keep", action="store_true", help="keep temporary self-test output")
+    strict = sub.add_parser("strict-validate", help="run independent Stage A/B and 10 MHz benchmarks")
+    strict.add_argument("--outdir", type=Path, required=True)
     return parser
 
 
@@ -81,6 +83,12 @@ def main(argv: list[str] | None = None) -> int:
                                  command=[sys.executable, *sys.argv[1:]])
             print(json.dumps(summary, ensure_ascii=False, indent=2))
         return 0 if summary["validation_status"] == "pass" else 2
+    if args.command == "strict-validate":
+        from .strict_validation import run_strict_validation
+
+        report = run_strict_validation(args.outdir)
+        print(json.dumps(report, ensure_ascii=False, indent=2))
+        return 0 if report["status"] == "pass" else 2
     raise AssertionError(args.command)
 
 
