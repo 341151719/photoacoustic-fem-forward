@@ -187,7 +187,11 @@ def generate_mesh(cfg: CaseConfig, msh_path: str | Path) -> Path:
             _add_physical(gmsh, 2, entities, tag, TAGS.material_names[tag])
 
         boundary_entities: dict[int, list[int]] = {TAGS.sensor: [], TAGS.outer_absorbing: []}
-        edge_tol = max(1e-9, 0.02 * mc.element_size_m)
+        # OpenCASCADE bounding boxes include a geometric tolerance of roughly
+        # 1e-7 m.  A tolerance tied only to h fails for micron-scale meshes
+        # (notably the strict 10 MHz benchmark) even though the CAD entities
+        # are correctly split.
+        edge_tol = max(1e-7, 0.02 * mc.element_size_m)
         for dim, tag in gmsh.model.getEntities(1):
             xmin, ymin, _, xmax, ymax, _ = gmsh.model.getBoundingBox(dim, tag)
             cx, cy = 0.5 * (xmin + xmax), 0.5 * (ymin + ymax)

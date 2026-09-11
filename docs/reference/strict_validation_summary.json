@@ -1,0 +1,43 @@
+{
+  "schema_version": "pa_fem.strict_validation.v1",
+  "generated_date": "2026-09-10",
+  "status": "pass",
+  "hard_checks_passed": 5,
+  "hard_checks_total": 5,
+  "uniform_analytic_and_closed_energy": {
+    "analytic_waveform_relative_l2": 0.022499511874146155,
+    "peak_time_relative_error": 0.005439999999999829,
+    "closed_boundary_energy_max_relative_drift": 1.6653345369377348e-15,
+    "passed": true
+  },
+  "abc_large_domain": {
+    "reflection_amplitude_ratio": 0.0017623414942647213,
+    "reflection_db": -55.07819866416963,
+    "passed": true
+  },
+  "interface_reflection": {
+    "expected_pressure_reflection_coefficient": 0.04423635776557959,
+    "observed_pressure_reflection_coefficient": 0.04139874189941675,
+    "relative_error": 0.06414668859493657,
+    "passed": true
+  },
+  "aperture_quadrature": {
+    "coarse_relative_error": 0.07514158810703003,
+    "fine_relative_error": 0.008238231245270223,
+    "passed": true
+  },
+  "ten_mhz_parameterized": {
+    "scope": "scaled homogeneous 10 MHz canonical benchmark; not unreported paper geometry",
+    "fine_dofs": 60170,
+    "coarse_dofs": 15215,
+    "fine_h_m": 2.5e-6,
+    "coarse_h_m": 5e-6,
+    "fine_dt_s": 5e-10,
+    "coarse_dt_s": 1e-9,
+    "analytic_raw_waveform_relative_l2": 0.0024414731536636374,
+    "peak_time_relative_error": 0.0010000000000000189,
+    "spatial_10MHz_bandlimited_relative_l2_h5_vs_h2p5": 0.013116186045260938,
+    "temporal_10MHz_bandlimited_relative_l2_dt1ns_vs_dt0p5ns": 0.002789108728953572,
+    "passed": true
+  }
+}
