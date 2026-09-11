@@ -11,7 +11,7 @@ Phi(x) [J/m²]
   -> (1/K) p_tt - div((1/rho) grad(p)) = 0
   -> M p¨ + C_ABC p˙ + K p = 0 (Newmark beta=1/4, gamma=1/2)
   -> r^T p / A_sensor (有限线孔径平均)
-  -> causal Butterworth band-pass (默认 1 MHz, 80% 工程假设)
+  -> causal Butterworth band-pass (默认 1 MHz, 80% 功率半高全宽工程假设)
   -> waveform.npz
 ```
 
@@ -89,7 +89,7 @@ python -m pa_fem.cli audit /tmp/pa_domain.msh --config configs/debug.json
 
 - `mesh.msh`：带 Physical Groups 的原始 Gmsh 4.1 网格；
 - `snapshots.vtu`：`p0` 和若干时刻的节点压力，可用 ParaView 打开；
-- `waveform.npz`：`time_s`、有限孔径 `s_raw_pa`、带宽后 `s_meas_pa`、可选 ADC 重采样及能量；
+- `waveform.npz`：`time_s`、有限孔径 `s_raw_pa`、带宽后 `s_meas_pa`、可选抗混叠 ADC 重采样及离散波动方程能量；
 - `metadata.json`：SI 配置、版本、命令、网格 SHA256、矩阵/时间步/源/接收器信息；
 - `validation.json`：Physical 标签、面积和质量、接口拓扑、矩阵对称性、源积分、到达时间诊断、ABC 能量和实际线性检验；
 - `mesh.png`、`initial_pressure.png`、`waveform.png`：快速检查图（均标有单位）。
@@ -129,9 +129,13 @@ python tools/make_visual_validation.py \
 当前 40 vs 30 µm 的 1 MHz 波形 L2 差为 1.35%，10 vs 5 ns 的差为 0.88%；
 有效性结论因而限定于已建模的 1 MHz 接收带宽。
 
-## 严格 Stage A/B 与 10 MHz 验收
+双编码前端原型使用多组非负光照和积分前的理想独立时延通道；运行方法、
+数据布局、可辨识性指标和模型边界见 `README_DUAL_CN.md`。该原型不包含真实
+固体编码板或压缩重建，不能据其峰值差异宣称分辨率改善。
 
-除单算例内部自检外，仓库提供带独立参照的严格验收：
+## Stage A/B 标准基准与 10 MHz 验收
+
+除单算例内部自检外，仓库提供带独立参照的标准基准验收：
 
 ```bash
 source scripts/activate.sh
@@ -140,9 +144,10 @@ python -m pa_fem.cli strict-validate --outdir results/strict_validation
 
 该命令运行二维域内嵌的一维 d'Alembert 平面高斯解析解、封闭域能量守恒、
 小域/大域 ABC 对照、解析平面界面反射系数、有限孔径解析积分，以及真正的
-10 MHz 空间/时间细化。严格命令只在全部硬检查通过时返回 0；详细方法、阈值
+10 MHz 空间/时间细化。该命令只在全部标准基准硬检查通过时返回 0；详细方法、阈值
 和基准结果见 `docs/STRICT_VALIDATION_CN.md`。10 MHz 项是保持相应声学尺度的
 缩小标准算例，用于验证数值参数，不冒充论文没有公开的实验几何或探头响应。
+法向平面波结果不外推到局部圆源、斜入射或三维有限面积探头。
 
 ## 与参考文件的边界
 

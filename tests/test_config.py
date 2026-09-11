@@ -1,6 +1,9 @@
 from __future__ import annotations
 
+from dataclasses import replace
 from pathlib import Path
+
+import pytest
 
 from pa_fem.config import CaseConfig, load_config
 
@@ -19,3 +22,9 @@ def test_config_round_trip():
     clone = CaseConfig.from_dict(cfg.to_dict())
     assert clone == cfg
 
+
+def test_confinement_uses_smallest_absorber_or_spot_scale():
+    cfg = CaseConfig()
+    too_small = replace(cfg, geometry=replace(cfg.geometry, absorber_radius_m=5e-6))
+    with pytest.raises(ValueError, match="initial-pressure approximation"):
+        too_small.validate()
