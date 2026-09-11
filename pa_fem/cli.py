@@ -40,6 +40,9 @@ def _parser() -> argparse.ArgumentParser:
     test.add_argument("--keep", action="store_true", help="keep temporary self-test output")
     strict = sub.add_parser("strict-validate", help="run independent Stage A/B and 10 MHz benchmarks")
     strict.add_argument("--outdir", type=Path, required=True)
+    dual = sub.add_parser("dual-forward", help="run optical-pattern and ideal-channel encoded forward model")
+    dual.add_argument("--config", type=Path, default=Path("configs/dual_10MHz_compact.json"))
+    dual.add_argument("--outdir", type=Path, required=True)
     return parser
 
 
@@ -87,6 +90,12 @@ def main(argv: list[str] | None = None) -> int:
         from .strict_validation import run_strict_validation
 
         report = run_strict_validation(args.outdir)
+        print(json.dumps(report, ensure_ascii=False, indent=2))
+        return 0 if report["status"] == "pass" else 2
+    if args.command == "dual-forward":
+        from .dual_compressed import run as run_dual
+
+        report = run_dual(args.config, args.outdir)
         print(json.dumps(report, ensure_ascii=False, indent=2))
         return 0 if report["status"] == "pass" else 2
     raise AssertionError(args.command)

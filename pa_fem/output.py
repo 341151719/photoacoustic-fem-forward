@@ -39,7 +39,10 @@ def write_json(path: str | Path, data: dict[str, Any]) -> None:
 
 def write_waveform(outdir: Path, result: TransientResult, measured_signal_pa: np.ndarray,
                    cfg: CaseConfig) -> dict[str, Any]:
-    adc_time, adc_signal, adc_meta = resample_signal(result.time_s, measured_signal_pa, cfg.sensor.adc_rate_hz)
+    upper_band = cfg.sensor.center_frequency_hz * (1.0 + cfg.sensor.fractional_bandwidth_fwhm / 2.0)
+    adc_time, adc_signal, adc_meta = resample_signal(
+        result.time_s, measured_signal_pa, cfg.sensor.adc_rate_hz,
+        required_band_hz=upper_band if cfg.sensor.adc_rate_hz is not None else None)
     np.savez_compressed(
         outdir / "waveform.npz",
         time_s=result.time_s,
@@ -47,7 +50,7 @@ def write_waveform(outdir: Path, result: TransientResult, measured_signal_pa: np
         s_meas_pa=np.asarray(measured_signal_pa),
         time_adc_s=adc_time,
         s_adc_pa=adc_signal,
-        energy_j_like=result.energy,
+        discrete_wave_energy=result.energy,
     )
     return adc_meta
 

@@ -1,0 +1,52 @@
+{
+  "case_name": "dual_compressed_10MHz_compact_ideal_channels",
+  "random_seed": 20260911,
+  "geometry": {
+    "domain_x_min_m": -0.0006,
+    "domain_x_max_m": 0.0006,
+    "domain_y_min_m": 0.0,
+    "domain_y_max_m": 0.001,
+    "tissue_x_min_m": -0.0005,
+    "tissue_x_max_m": 0.0005,
+    "tissue_y_min_m": 0.0002,
+    "tissue_y_max_m": 0.0009,
+    "absorber_x_m": 0.0,
+    "absorber_y_m": 0.00055,
+    "absorber_radius_m": 0.00003,
+    "sensor_x_min_m": -0.00015,
+    "sensor_x_max_m": 0.00015,
+    "sensor_y_m": 0.0
+  },
+  "mesh": {
+    "element_size_m": 0.000012,
+    "interface_size_m": 0.000006,
+    "source_size_m": 0.000004
+  },
+  "optical": {
+    "phi_peak_j_m2": 100.0,
+    "sigma_m": 0.00001,
+    "source_x_m": 0.0,
+    "source_y_m": 0.00055,
+    "laser_pulse_width_s": 1e-10
+  },
+  "sensor": {
+    "center_frequency_hz": 10000000.0,
+    "fractional_bandwidth_fwhm": 0.8,
+    "filter_order": 4,
+    "noise_rms_pa": 0.0
+  },
+  "time": {
+    "dt_s": 5e-10,
+    "t_end_s": 8e-7,
+    "save_every": 1600
+  },
+  "dual": {
+    "source_basis_count": 6,
+    "pattern_count": 16,
+    "aperture_channels": 8,
+    "aperture_y_m": 0.0001,
+    "common_delay_fraction_of_tof": 0.15,
+    "max_extra_delay_fraction_of_tof": 0.8,
+    "quadrature_order": 8
+  }
+}

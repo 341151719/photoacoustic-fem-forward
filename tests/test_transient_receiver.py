@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 import numpy as np
+import pytest
 
 from pa_fem.assemble import build_system
-from pa_fem.receiver import apply_receiver_response
+from pa_fem.receiver import apply_receiver_response, resample_signal
 from pa_fem.time_integrator import run_newmark
 from pa_fem.validation import estimate_arrival, validate_case
 
@@ -26,3 +27,13 @@ def test_newmark_abc_and_actual_linearity(smoke_case, smoke_mesh):
 def test_arrival_returns_none_for_zero_trace():
     assert estimate_arrival(np.linspace(0.0, 1.0, 8), np.zeros(8)) is None
 
+
+def test_adc_resampling_is_antialiased_and_checks_nyquist():
+    time = np.arange(1001) / 100e6
+    signal = np.sin(2.0 * np.pi * 1e6 * time)
+    with pytest.raises(ValueError, match="Nyquist"):
+        resample_signal(time, signal, 3e6, required_band_hz=2e6)
+    target, sampled, meta = resample_signal(time, signal, 10e6, required_band_hz=2e6)
+    assert len(target) == len(sampled)
+    assert meta["method"] == "polyphase_FIR_antialias"
+    assert np.isfinite(sampled).all()

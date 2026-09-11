@@ -1,0 +1,170 @@
+{
+  "schema_version": "pa_fem.dual_forward.v2",
+  "status_scope": "dataflow, finiteness, and linear-superposition consistency; not accuracy convergence",
+  "model": "2D FEM plus ideal unloaded independent delay-channel aperture",
+  "limitations": [
+    "Not a manufactured mask FEM or paper geometry reproduction",
+    "No optical scattering, shear, channel loading, losses, or post-pickup cross-talk",
+    "No reconstruction or claimed subwavelength resolution",
+    "Fractional delays use linear interpolation; channel signals are zero-extended",
+    "Receiver bandwidth is Butterworth power-FWHM (-3 dB edges)"
+  ],
+  "config": {
+    "case_name": "dual_compressed_10MHz_compact_ideal_channels",
+    "geometry": {
+      "domain_x_min_m": -0.0006,
+      "domain_x_max_m": 0.0006,
+      "domain_y_min_m": 0.0,
+      "domain_y_max_m": 0.001,
+      "tissue_x_min_m": -0.0005,
+      "tissue_x_max_m": 0.0005,
+      "tissue_y_min_m": 0.0002,
+      "tissue_y_max_m": 0.0009,
+      "absorber_x_m": 0.0,
+      "absorber_y_m": 0.00055,
+      "absorber_radius_m": 3e-05,
+      "sensor_x_min_m": -0.00015,
+      "sensor_x_max_m": 0.00015,
+      "sensor_y_m": 0.0
+    },
+    "mesh": {
+      "element_size_m": 1.2e-05,
+      "interface_size_m": 6e-06,
+      "source_size_m": 4e-06,
+      "algorithm": 6,
+      "msh_file_version": 4.1
+    },
+    "materials": {
+      "rho_water_kg_m3": 1000.0,
+      "c_water_m_s": 1480.0,
+      "rho_tissue_kg_m3": 1050.0,
+      "c_tissue_m_s": 1540.0,
+      "rho_absorber_kg_m3": 1050.0,
+      "c_absorber_m_s": 1540.0,
+      "mu_a_water_m_inv": 0.0,
+      "mu_a_tissue_m_inv": 10.0,
+      "mu_a_absorber_m_inv": 1000.0,
+      "gamma_water": 0.0,
+      "gamma_tissue": 0.1,
+      "gamma_absorber": 0.1,
+      "eta_th_water": 1.0,
+      "eta_th_tissue": 1.0,
+      "eta_th_absorber": 1.0
+    },
+    "optical": {
+      "phi_peak_j_m2": 100.0,
+      "sigma_m": 1e-05,
+      "source_x_m": 0.0,
+      "source_y_m": 0.00055,
+      "laser_pulse_width_s": 1e-10,
+      "require_initial_pressure_approximation": true
+    },
+    "sensor": {
+      "center_frequency_hz": 10000000.0,
+      "fractional_bandwidth_fwhm": 0.8,
+      "filter_order": 4,
+      "adc_rate_hz": null,
+      "noise_rms_pa": 0.0,
+      "noise_seed": 20260910
+    },
+    "time": {
+      "t_end_s": 8e-07,
+      "dt_s": 5e-10,
+      "save_every": 1600
+    },
+    "random_seed": 20260911
+  },
+  "dual_settings": {
+    "source_basis_count": 6,
+    "pattern_count": 16,
+    "aperture_channels": 8,
+    "aperture_y_m": 0.0001,
+    "common_delay_fraction_of_tof": 0.15,
+    "max_extra_delay_fraction_of_tof": 0.8,
+    "quadrature_order": 8
+  },
+  "dofs": 53171,
+  "source_centers_m": [
+    [
+      -1.95e-05,
+      0.00055
+    ],
+    [
+      -1.1700000000000001e-05,
+      0.00055
+    ],
+    [
+      -3.9e-06,
+      0.00055
+    ],
+    [
+      3.9e-06,
+      0.00055
+    ],
+    [
+      1.1700000000000001e-05,
+      0.00055
+    ],
+    [
+      1.95e-05,
+      0.00055
+    ]
+  ],
+  "aperture_y_m": 0.0001,
+  "estimated_source_to_aperture_tof_s": 2.9484029484029487e-07,
+  "common_delay_s": 4.422604422604423e-08,
+  "additional_channel_delays_s": [
+    8.567447185039067e-08,
+    1.6105271940627916e-07,
+    1.7258559482269877e-07,
+    3.225999584390728e-08,
+    2.062394981429527e-07,
+    2.078306386970494e-07,
+    2.3108074536751095e-07,
+    2.7385208639281653e-08
+  ],
+  "fem_samples": 1601,
+  "measurement_samples": 3752,
+  "numerical_resolution": {
+    "p95_edge_m": 7.87140516443241e-06,
+    "characteristic_recommendation_h_m": 2.0943951023931953e-06,
+    "p95_over_recommendation": 3.758319122995474,
+    "characteristic_resolution_met": false,
+    "interpretation": "source estimate is not a strict cutoff for the discontinuous absorption field; the compact case has no convergence claim"
+  },
+  "coded_peak_pa": 133.3845268199437,
+  "uncoded_peak_pa": 511.7015811809847,
+  "coded_vs_uncoded_relative_l2": 1.1165749364294162,
+  "coded_operator": {
+    "maximum_absolute_column_coherence": 0.9983807649083024,
+    "singular_values": [
+      789.3657503018015,
+      95.64921040613807,
+      4.330637949566599,
+      0.5602320950648713,
+      0.13007669513691467,
+      0.018944647332145147
+    ],
+    "condition_number": 41666.954072162174,
+    "rank": 6
+  },
+  "uncoded_operator": {
+    "maximum_absolute_column_coherence": 0.9999999846906881,
+    "singular_values": [
+      2556.482099880481,
+      8.305904549668126,
+      0.32824221108189805,
+      0.2528365888376046,
+      0.05120825937168295,
+      0.002440788222899599
+    ],
+    "condition_number": 1047400.2110856797,
+    "rank": 6
+  },
+  "pattern_matrix_rank": 6,
+  "direct_pattern_vs_basis_relative_l2": 2.3824896840743185e-15,
+  "zero_delay_bucket_relative_l2": 0.0,
+  "finite": true,
+  "status": "pass",
+  "runtime_s": 46.6851427770016
+}

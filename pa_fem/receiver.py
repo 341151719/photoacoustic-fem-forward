@@ -6,7 +6,7 @@ from fractions import Fraction
 from typing import Any
 
 import numpy as np
-from scipy.signal import butter, sosfilt
+from scipy.signal import butter, resample_poly, sosfilt
 
 from .config import SensorConfig
 
@@ -15,8 +15,9 @@ def apply_receiver_response(raw_signal_pa: np.ndarray, dt_s: float,
                             cfg: SensorConfig) -> tuple[np.ndarray, dict[str, Any]]:
     """Apply an explicitly causal Butterworth band-pass response.
 
-    The default bandwidth is an engineering baseline (80% FWHM around 1 MHz),
-    not a claim about the paper's unreported transducer response.  ``sosfilt``
+    The configured bandwidth is the total power-FWHM: its Butterworth edges
+    are -3 dB points (amplitude 1/sqrt(2)).  It is an engineering baseline,
+    not a claim about the paper's unreported transducer response. ``sosfilt``
     is causal; no zero-phase filtering is used for arrival-time data.
     """
 
@@ -37,7 +38,8 @@ def apply_receiver_response(raw_signal_pa: np.ndarray, dt_s: float,
         "causal": True,
         "zero_phase": False,
         "center_frequency_hz": fc,
-        "fractional_bandwidth_fwhm_assumption": frac,
+        "fractional_bandwidth_power_fwhm_assumption": frac,
+        "edge_definition": "Butterworth -3 dB; power half maximum; amplitude 1/sqrt(2)",
         "nominal_low_cut_hz": low,
         "nominal_high_cut_hz": high,
         "filter_order": int(cfg.filter_order),
@@ -54,8 +56,9 @@ def apply_receiver_response(raw_signal_pa: np.ndarray, dt_s: float,
 
 
 def resample_signal(time_s: np.ndarray, signal: np.ndarray,
-                    adc_rate_hz: float | None) -> tuple[np.ndarray, np.ndarray, dict[str, Any]]:
-    """Return an optional uniformly sampled ADC waveform by interpolation."""
+                    adc_rate_hz: float | None, *,
+                    required_band_hz: float | None = None) -> tuple[np.ndarray, np.ndarray, dict[str, Any]]:
+    """Return an optional anti-aliased uniformly sampled ADC waveform."""
 
     time_s = np.asarray(time_s, dtype=float)
     signal = np.asarray(signal, dtype=float)
@@ -63,9 +66,22 @@ def resample_signal(time_s: np.ndarray, signal: np.ndarray,
         return time_s.copy(), signal.copy(), {"adc_rate_hz": None, "method": "native_fem_sampling"}
     if adc_rate_hz <= 0:
         raise ValueError("adc_rate_hz must be positive")
-    n = int(np.floor((time_s[-1] - time_s[0]) * adc_rate_hz)) + 1
-    target = time_s[0] + np.arange(max(n, 2), dtype=float) / adc_rate_hz
-    target = target[target <= time_s[-1] + 0.5 / adc_rate_hz]
-    out = np.interp(target, time_s, signal)
-    return target, out, {"adc_rate_hz": float(adc_rate_hz), "method": "linear_interpolation"}
-
+    if required_band_hz is not None and adc_rate_hz < 2.0 * required_band_hz:
+        raise ValueError(
+            f"adc_rate_hz={adc_rate_hz:.4g} cannot Nyquist-sample the required "
+            f"band edge {required_band_hz:.4g} Hz"
+        )
+    native_rate = 1.0 / float(time_s[1] - time_s[0])
+    ratio = Fraction(float(adc_rate_hz / native_rate)).limit_denominator(100_000)
+    out = resample_poly(signal, ratio.numerator, ratio.denominator)
+    target = time_s[0] + np.arange(len(out), dtype=float) / float(adc_rate_hz)
+    keep = target <= time_s[-1] + 0.5 / float(adc_rate_hz)
+    out = np.asarray(out[keep], dtype=float)
+    target = target[keep]
+    return target, out, {
+        "adc_rate_hz": float(adc_rate_hz),
+        "method": "polyphase_FIR_antialias",
+        "up": int(ratio.numerator),
+        "down": int(ratio.denominator),
+        "required_band_hz": None if required_band_hz is None else float(required_band_hz),
+    }

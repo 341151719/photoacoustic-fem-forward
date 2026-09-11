@@ -72,6 +72,12 @@ The 10 MHz configuration is an explicitly labelled scaling example. It is not cl
 
 The unfiltered broadband trace converges more slowly (9.02% between 40 and 30 um) because it retains frequencies outside the modelled receiver band. The current convergence claim is intentionally limited to the specified 1 MHz detected bandwidth.
 
+An optional dual-encoded forward prototype is available through
+`pa-fem dual-forward --config configs/dual_10MHz_compact.json --outdir results/dual_10MHz_compact`.
+It applies non-negative optical patterns and ideal independent channel delays before
+bucket integration. It is not a manufactured acoustic mask or a reconstruction claim;
+see `README_DUAL_CN.md` for its assumptions and diagnostics.
+
 ![Numerical validity](docs/assets/04_numerical_validity.png)
 
 See the [complete validation report](docs/VALIDATION_CN.md) and [machine-readable summary](docs/reference/visual_validation_summary.json).

@@ -2,8 +2,8 @@ cff-version: 1.2.0
 message: "If you use this physical forward model, please cite this repository and the underlying photoacoustic literature."
 title: "Photoacoustic FEM Forward"
 type: software
-version: 0.1.0
-date-released: 2026-09-10
+version: 0.2.0
+date-released: 2026-09-11
 license: MIT
 repository-code: "https://github.com/341151719/photoacoustic-fem-forward"
 keywords:

@@ -32,8 +32,12 @@ def source_summary(cfg: CaseConfig, materials: dict[int, Material]) -> dict[str,
     return {
         "fluence_peak_j_m2": cfg.optical.phi_peak_j_m2,
         "sigma_m": cfg.optical.sigma_m,
+        "characteristic_length_m": min(cfg.optical.sigma_m, cfg.geometry.absorber_radius_m),
         "fwhm_m": 2.0 * np.sqrt(2.0 * np.log(2.0)) * cfg.optical.sigma_m,
         "source_bandlimit_hz": cfg.source_frequency_hz(),
+        "source_bandlimit_interpretation": (
+            "three-sigma characteristic estimate; not a strict cutoff for discontinuous absorption"
+        ),
         "p0_peak_estimate_pa": peak,
         "p0_peak_estimate_kind": "upper_bound_if_source_is_in_maximum_absorption_region",
         "laser_pulse_width_s": cfg.optical.laser_pulse_width_s,

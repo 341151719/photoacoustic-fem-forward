@@ -69,6 +69,8 @@ class OpticalConfig:
 @dataclass(frozen=True)
 class SensorConfig:
     center_frequency_hz: float = 1.0e6
+    # Total power-FWHM bandwidth.  For the Butterworth engineering model this
+    # places the band edges at the -3 dB (amplitude 1/sqrt(2)) points.
     fractional_bandwidth_fwhm: float = 0.80
     filter_order: int = 4
     adc_rate_hz: float | None = None
@@ -166,8 +168,12 @@ class CaseConfig:
 
     def constraint_times(self) -> tuple[float, float]:
         """Return conservative stress and thermal confinement times (seconds)."""
-        length = max(self.optical.sigma_m, 1e-15)
-        c = max(self.materials.c_tissue_m_s, self.materials.c_water_m_s)
+        # Both illumination width and explicit absorber size can control the
+        # deposited-energy scale.  This remains a characteristic-scale check:
+        # an ideal discontinuous mu_a interface has no finite spectral cutoff.
+        length = max(min(self.optical.sigma_m, self.geometry.absorber_radius_m), 1e-15)
+        c = max(self.materials.c_tissue_m_s, self.materials.c_water_m_s,
+                self.materials.c_absorber_m_s)
         # Thermal diffusivity for soft tissue, engineering reference value.
         alpha_th = 1.4e-7
         return length / c, length * length / (4.0 * alpha_th)
@@ -175,10 +181,11 @@ class CaseConfig:
     def source_frequency_hz(self) -> float:
         c_min = min(self.materials.c_water_m_s, self.materials.c_tissue_m_s,
                     self.materials.c_absorber_m_s)
-        return 3.0 * c_min / (2.0 * math.pi * self.optical.sigma_m)
+        length = min(self.optical.sigma_m, self.geometry.absorber_radius_m)
+        return 3.0 * c_min / (2.0 * math.pi * length)
 
     def recommended_mesh_size_m(self) -> float:
-        # Fractional bandwidth is the total FWHM, so the upper edge is
+        # Fractional bandwidth is the total power-FWHM (-3 dB edges), so the upper edge is
         # fc * (1 + B/2), consistent with the receiver filter.
         f_tr = self.sensor.center_frequency_hz * (1.0 + self.sensor.fractional_bandwidth_fwhm / 2.0)
         return min(self.materials.c_water_m_s, self.materials.c_tissue_m_s,

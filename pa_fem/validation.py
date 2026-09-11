@@ -85,7 +85,8 @@ def validate_case(system: AcousticSystem, result: TransientResult,
     p0_peak = float(np.max(np.abs(p0)))
     # For the mass-lumped projection, sum of nodal lumped weights equals the
     # assembled source RHS integral exactly.
-    p0_integral = float(np.sum(system.p0_rhs))
+    lumped_weights = np.asarray(system.geometric_mass @ np.ones(system.n_dofs), dtype=float)
+    p0_integral = float(np.dot(lumped_weights, system.p0))
     p0_consistent_integral = float(np.sum(system.geometric_mass @ system.p0_raw_projection))
     p0_rhs_integral = float(np.sum(system.p0_rhs))
     raw = result.raw_signal_pa
@@ -95,6 +96,7 @@ def validate_case(system: AcousticSystem, result: TransientResult,
     linearity_residual = None if linearity_result is None else _relative_l2(linearity_result.raw_signal_pa, 2.0 * raw)
     report = {
         "status": "pass",
+        "status_scope": "mesh, assembly, source positivity, stability, and optional linearity; not full accuracy convergence",
         "units": {"pressure": "Pa", "time": "s", "length": "m", "fluence": "J/m^2"},
         "mesh": {
             "n_points": int(len(system.mesh_data.points_m)),
@@ -141,8 +143,8 @@ def validate_case(system: AcousticSystem, result: TransientResult,
         "limitations": [
             "2-D pressure acoustics represent an out-of-plane infinite line source and line receiver.",
             "Tissue is treated as an inviscid fluid; no shear, thermal, or power-law attenuation is included.",
-            "The finite-aperture receiver uses a diagnostic causal Butterworth response unless measured h_tr is supplied.",
-            "No encoded acoustic aperture or compressed/reconstruction algorithm is implemented.",
+            "The finite-aperture receiver uses a diagnostic causal Butterworth response; measured h_tr input is not implemented.",
+            "This single-case pipeline applies no encoded aperture; the optional ideal dual-forward prototype is separate.",
         ],
     }
     hard_checks = [
